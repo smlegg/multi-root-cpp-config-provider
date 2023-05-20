@@ -1,0 +1,77 @@
+{
+  "name": "multi-root-cpp-config-provider",
+  "displayName": "Multi-root C++ config provider",
+  "description": "Multi-root C++ configuration provider",
+  "version": "1.0.0",
+  "author": "Steve Legg",
+  "publisher": "Steve Legg",
+  "engines": {
+    "vscode": "^1.78.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smlegg/multi-root-cpp-config-provider.git"
+  },
+  "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:cpp"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "multiRootCppConfig.ConfigurationSelect",
+        "title": "Select multi-root C/C++ configuration",
+        "category": "C/C++"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Multi-root C++ config",
+        "properties": {
+          "multiRootCppConfig.folders": {
+            "type": "array",
+            "description": "Per-folder C++ config",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Folder name"
+                },
+                "configurations": {
+                  "$ref": "cpptools-schema:///c_cpp_properties.schema.json#/configurations"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.78.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.0.4",
+    "@vscode/test-electron": "^2.3.0",
+    "vscode-cpptools": "^6.1.0"
+  }
+}
