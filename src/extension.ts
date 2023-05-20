@@ -121,8 +121,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 			}
 		}
 
-		this.configStatusBarItem.text = this.configNames[this.currentConfig] ?? "(no config)";
-		this.configStatusBarItem.show();
+		this.updateStatusBar();
 
 		extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text)
 
@@ -218,6 +217,19 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 		return null;
 	}
 
+	async updateStatusBar()
+	{
+		let configName = this.configNames[this.currentConfig];
+		this.configStatusBarItem.text = configName ?? "(no config)";
+		if (configName)
+		{
+			this.configStatusBarItem.show();
+		} else
+		{
+			this.configStatusBarItem.hide();
+		}
+	}
+
 	async onSelectConfiguration()
 	{
 		let items: IndexableQuickPickItem[] = [];
@@ -229,7 +241,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 		if (selection && selection.index !== this.currentConfig)
 		{
 			this.currentConfig = selection.index;
-			this.configStatusBarItem.text = this.configNames[selection.index];
+			this.updateStatusBar();
 			extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text)
 			cppToolsApi?.didChangeCustomConfiguration(this);
 			cppToolsApi?.didChangeCustomBrowseConfiguration(this);
