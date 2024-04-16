@@ -2,7 +2,7 @@
   "name": "multi-root-cpp-config-provider",
   "displayName": "Multi-root C++ config provider",
   "description": "Multi-root C++ configuration provider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Steve Legg",
   "publisher": "Steve Legg",
   "engines": {
@@ -47,6 +47,10 @@
                 }
               }
             }
+          },
+          "multiRootCppConfig.file": {
+            "type": "string",
+            "description": "File containing per-folder C++ config"
           }
         }
       }
@@ -74,6 +78,7 @@
     "@vscode/test-electron": "^2.3.0"
   },
   "dependencies": {
-    "vscode-cpptools": "^6.1.0"
+    "vscode-cpptools": "^6.1.0",
+    "comment-json": "^3.0.0"
   }
 }

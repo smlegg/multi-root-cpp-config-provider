@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import * as cpptools from 'vscode-cpptools';
+import * as fs from 'fs';
+import * as jsonc from 'comment-json';
+import * as path from 'path';
 
 let multiRootProvider: MultiRootCppConfigProvider | null = null;
 let cppToolsApi: cpptools.CppToolsApi | undefined = undefined;
@@ -47,6 +50,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 	currentConfig = 0;
 	configStatusBarItem: vscode.StatusBarItem;
 	disposables: vscode.Disposable[] = [];
+	configWatcher: vscode.FileSystemWatcher | undefined = undefined;
 
 	constructor()
 	{
@@ -81,7 +85,31 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 		this.configNames = [];
 		this.configs.clear();
 
-		let folders: FolderSettings[] | undefined = vscode.workspace.getConfiguration('multiRootCppConfig').get('folders');
+
+		let folders: FolderSettings[] | undefined = undefined;
+
+		let fileName: string | undefined = vscode.workspace.getConfiguration('multiRootCppConfig').get('file');
+		if (fileName)
+		{
+			let uri = vscode.Uri.file(path.join(path.dirname(vscode.workspace.workspaceFile?.fsPath ?? "/"), fileName));
+			const readResults = fs.readFileSync(uri.fsPath, 'utf8');
+			const json = jsonc.parse(readResults);
+			if (json)
+			{
+				folders = json["multiRootCppConfig.folders"];
+				this.configWatcher = vscode.workspace.createFileSystemWatcher(uri.fsPath);
+				this.disposables.push(this.configWatcher);
+				this.configWatcher.onDidChange((e) => {
+					this.refreshConfig(this.configNames[this.currentConfig]);
+				});
+			}
+		}
+
+		if (!folders)
+		{
+			folders = vscode.workspace.getConfiguration('multiRootCppConfig').get('folders');
+		}
+
 		if (folders)
 		{
 			folders.forEach((folder): void =>
