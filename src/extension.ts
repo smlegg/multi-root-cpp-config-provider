@@ -151,7 +151,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 
 		this.updateStatusBar();
 
-		extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text)
+		extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text);
 
 		cppToolsApi?.didChangeCustomConfiguration(this);
 		cppToolsApi?.didChangeCustomBrowseConfiguration(this);
@@ -270,7 +270,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 		{
 			this.currentConfig = selection.index;
 			this.updateStatusBar();
-			extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text)
+			extensionContext?.workspaceState.update("MultiRootCPP.currentConfig", this.configStatusBarItem.text);
 			cppToolsApi?.didChangeCustomConfiguration(this);
 			cppToolsApi?.didChangeCustomBrowseConfiguration(this);
 		}
@@ -304,7 +304,8 @@ export async function activate(context: vscode.ExtensionContext)
 		}
 
 		disposables.push(vscode.commands.registerCommand('multiRootCppConfig.ConfigurationSelect', () => { multiRootProvider?.onSelectConfiguration(); }));
-		disposables.push(vscode.commands.registerCommand('multiRootCppConfig.activeConfigName', () => { return multiRootProvider?.getCurrentConfigName(); }))
+		disposables.push(vscode.commands.registerCommand('multiRootCppConfig.activeConfigName', () => { return multiRootProvider?.getCurrentConfigName(); }));
+		disposables.push(vscode.commands.registerCommand('multiRootCppConfig.Launch', () => { return multiRootProvider?.launch();}));
 	}
 }
 
