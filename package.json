@@ -2,7 +2,7 @@
   "name": "multi-root-cpp-config-provider",
   "displayName": "Multi-root C++ config provider",
   "description": "Multi-root C++ configuration provider",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Steve Legg",
   "publisher": "Steve Legg",
   "engines": {
@@ -25,6 +25,11 @@
       {
         "command": "multiRootCppConfig.ConfigurationSelect",
         "title": "Select multi-root C/C++ configuration",
+        "category": "C/C++"
+      },
+      {
+        "command": "multiRootCppConfig.Launch",
+        "title": "Launch based on currently selected multi-root C/C++ configuration",
         "category": "C/C++"
       }
     ],
@@ -52,6 +57,28 @@
           "multiRootCppConfig.file": {
             "type": "string",
             "description": "File containing per-folder C++ config"
+          },
+          "multiRootCppConfig.launch": {
+            "type": "array",
+            "description": "Launch configurations",
+            "items": {
+              "type": "object",
+              "required": ["config"],
+              "properties": {
+                "config": {
+                  "type": "string",
+                  "description": "Name or regex pattern of configuration to match"
+                },
+                "launch": {
+                  "type": "string",
+                  "description": "Name of launch configuration to launch"
+                },
+                "task": {
+                  "type": "string",
+                  "description": "Name of task to run"
+                }
+              }
+            }
           }
         }
       }

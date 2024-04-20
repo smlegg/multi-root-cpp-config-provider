@@ -28,6 +28,13 @@ interface FolderConfig
 	windowsSdkVersion?: string
 }
 
+interface LaunchConfig
+{
+	config: string
+	launch: string | undefined
+	task: string | undefined
+}
+
 interface FolderSettings
 {
 	name: string
@@ -51,6 +58,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 	configStatusBarItem: vscode.StatusBarItem;
 	disposables: vscode.Disposable[] = [];
 	configWatcher: vscode.FileSystemWatcher | undefined = undefined;
+	launchConfigs: LaunchConfig[] | undefined = undefined;
 
 	constructor()
 	{
@@ -148,6 +156,8 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 				this.currentConfig = index;
 			}
 		}
+
+		this.launchConfigs = vscode.workspace.getConfiguration('multiRootCppConfig').get('launch');
 
 		this.updateStatusBar();
 
@@ -279,6 +289,48 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 	async getCurrentConfigName()
 	{
 		return this.configNames[this.currentConfig];
+	}
+
+	async launch()
+	{
+		if (this.launchConfigs)
+		{
+			const currentConfig = this.configNames[this.currentConfig];
+			for (let launchConfig of this.launchConfigs)
+			{
+				if (currentConfig.match(launchConfig.config))
+				{
+					if (launchConfig.launch)
+					{
+						for (let folder of vscode.workspace.workspaceFolders ?? [])
+						{
+							const workspaceLaunchConfig = vscode.workspace.getConfiguration('launch', folder.uri);
+							const workspaceLaunchConfigs: any[] | undefined = workspaceLaunchConfig.get('configurations');
+							for (let launch of workspaceLaunchConfigs ?? [])
+							{
+								if (launch["name"] === launchConfig.launch)
+								{
+									vscode.debug.startDebugging(folder, launch);
+									return;
+								}
+							}
+						}
+					} else if (launchConfig.task)
+					{
+						vscode.tasks.fetchTasks().then((tasks) => {
+							for (let task of tasks)
+							{
+								if (task.name === launchConfig.task)
+								{
+									vscode.tasks.executeTask(task);
+									return;
+								}
+							}
+						});
+					}
+				}
+			}
+		}
 	}
 }
 
