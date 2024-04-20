@@ -37,6 +37,7 @@
             "description": "Per-folder C++ config",
             "items": {
               "type": "object",
+              "required": ["name", "configurations"],
               "properties": {
                 "name": {
                   "type": "string",
