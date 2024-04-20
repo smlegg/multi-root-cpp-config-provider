@@ -293,7 +293,7 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 
 	async launch()
 	{
-		if (this.launchConfigs)
+		if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === "cpp" && this.launchConfigs)
 		{
 			const currentConfig = this.configNames[this.currentConfig];
 			for (let launchConfig of this.launchConfigs)
@@ -331,6 +331,8 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 				}
 			}
 		}
+
+		vscode.commands.executeCommand('workbench.action.debug.start');
 	}
 }
 
