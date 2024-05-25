@@ -93,7 +93,6 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 		this.configNames = [];
 		this.configs.clear();
 
-
 		let folders: FolderSettings[] | undefined = undefined;
 
 		let fileName: string | undefined = vscode.workspace.getConfiguration('multiRootCppConfig').get('file');
@@ -106,10 +105,9 @@ class MultiRootCppConfigProvider implements cpptools.CustomConfigurationProvider
 			{
 				folders = json["multiRootCppConfig.folders"];
 				this.configWatcher = vscode.workspace.createFileSystemWatcher(uri.fsPath);
-				this.disposables.push(this.configWatcher);
-				this.configWatcher.onDidChange((e) => {
+				this.disposables.push(this.configWatcher.onDidChange((e) => {
 					this.refreshConfig(this.configNames[this.currentConfig]);
-				});
+				}));
 			}
 		}
 

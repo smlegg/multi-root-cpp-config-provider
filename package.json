@@ -2,7 +2,7 @@
   "name": "multi-root-cpp-config-provider",
   "displayName": "Multi-root C++ config provider",
   "description": "Multi-root C++ configuration provider",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Steve Legg",
   "publisher": "Steve Legg",
   "engines": {
